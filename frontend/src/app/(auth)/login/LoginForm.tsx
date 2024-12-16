@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
+import axios from "axios";
 
 const LoginForm = () => {
   const [username, setUsername] = useState<string>("");
@@ -10,25 +12,30 @@ const LoginForm = () => {
 
   const router = useRouter();
 
+  const loginSchema = z.object({
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    password: z.string().min(7, "Password must be at leat 7 characters"),
+  });
+
   const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       setError(null);
+      const checkData = loginSchema.parse({username, password});
 
-      const response = await fetch("API_URL", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await axios.post("http://localhost:5058/api/user/authenticate", checkData)
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Invalid username or password");
       }
 
+      const token = await response.data;
+      localStorage.setItem("authToken", token);
+
       router.push("/");
     } catch (error) {
-      if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
         setError(error.message);
         console.error("Login failed:", error);
       } else {

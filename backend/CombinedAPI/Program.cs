@@ -11,6 +11,7 @@ using CombinedAPI.Services;
 using CombinedAPI.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -32,6 +33,15 @@ builder.Services.AddAuthentication(options =>
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
   };
 });
+builder.Services.AddCors(options => {
+    options.AddPolicy(MyAllowSpecificOrigins,
+        policy => {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 
 // Register Repositories and pass the connection string via IConfiguration
 builder.Services.AddScoped<IProductRepository>(provider =>
@@ -70,6 +80,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 

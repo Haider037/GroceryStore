@@ -25,7 +25,7 @@ export const getUserInfo = async (id: number): Promise<User> => {
 };
 const ProfilePage = async () => {
   var id = 1;
-  const userInfo = await getUserInfo(1);
+  const userInfo = await getUserInfo(id);
   return (
     <div className="bg-zinc-950 text-zinc-100 p-5 w-[30rem] h-full flex flex-col rounded-xl">
       <div className="flex flex-col items-center w-full">

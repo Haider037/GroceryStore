@@ -32,14 +32,9 @@ namespace CombinedAPI.Repositories
                 username = GetSafeString(reader, "Username"),
                 firstName = GetSafeString(reader, "FirstName"),
                 lastName = GetSafeString(reader, "LastName"),
-                address = GetSafeString(reader, "Address"),
                 email = GetSafeString(reader, "Email"),
                 phoneNumber = GetSafeString(reader, "PhoneNumber"),
                 password = GetSafeString(reader, "Password"),
-                creditcardNumber = GetSafeString(reader, "CreditCardNumber"),
-                creditcardExpDate = GetSafeString(reader, "CreditCardExpDate"),
-                cvv = GetSafeInt32(reader, "CVV"),
-                shippingLocation = GetSafeString(reader, "ShippingLocation")
               });
             }
           }
@@ -67,14 +62,9 @@ namespace CombinedAPI.Repositories
                 username = GetSafeString(reader, "Username"),
                 firstName = GetSafeString(reader, "FirstName"),
                 lastName = GetSafeString(reader, "LastName"),
-                address = GetSafeString(reader, "Address"),
                 email = GetSafeString(reader, "Email"),
                 phoneNumber = GetSafeString(reader, "PhoneNumber"),
                 password = GetSafeString(reader, "Password"),
-                creditcardNumber = GetSafeString(reader, "CreditCardNumber"),
-                creditcardExpDate = GetSafeString(reader, "CreditCardExpDate"),
-                cvv = GetSafeInt32(reader, "CVV"),
-                shippingLocation = GetSafeString(reader, "ShippingLocation")
               };
             }
           }
@@ -87,8 +77,8 @@ namespace CombinedAPI.Repositories
     {
       using (var connection = new SqlConnection(_connectionString))
       {
-        var query = @"INSERT INTO Users (Username, FirstName, LastName, Address, Email, PhoneNumber, Password, CreditCardNumber, CreditCardExpDate, CVV, ShippingLocation) 
-                            VALUES (@Username, @FirstName, @LastName, @Address, @Email, @PhoneNumber, @Password, @CreditCardNumber, @CreditCardExpDate, @CVV, @ShippingLocation);";
+        var query = @"INSERT INTO Users (Username, FirstName, LastName, Email, PhoneNumber, Password) 
+                            VALUES (@Username, @FirstName, @LastName, @Email, @PhoneNumber, @Password);";
 
         using (SqlCommand cmd = new SqlCommand(query, connection))
         {
@@ -96,14 +86,9 @@ namespace CombinedAPI.Repositories
           cmd.Parameters.AddWithValue("@Username", user.username);
           cmd.Parameters.AddWithValue("@FirstName", user.firstName);
           cmd.Parameters.AddWithValue("@LastName", user.lastName);
-          cmd.Parameters.AddWithValue("@Address", user.address);
           cmd.Parameters.AddWithValue("@Email", user.email);
           cmd.Parameters.AddWithValue("@PhoneNumber", user.phoneNumber);
           cmd.Parameters.AddWithValue("@Password", user.password);
-          cmd.Parameters.AddWithValue("@CreditCardNumber", user.creditcardNumber);
-          cmd.Parameters.AddWithValue("@CreditCardExpDate", user.creditcardExpDate);
-          cmd.Parameters.AddWithValue("@CVV", user.cvv);
-          cmd.Parameters.AddWithValue("@ShippingLocation", user.shippingLocation);
 
           int rowsAffected = cmd.ExecuteNonQuery();
           return rowsAffected > 0;
@@ -116,7 +101,7 @@ namespace CombinedAPI.Repositories
       using (var connection = new SqlConnection(_connectionString))
       {
         var query = @"UPDATE Users 
-                              SET Username = @Username, FirstName = @FirstName, LastName = @LastName, Address = @Address, Email = @Email, PhoneNumber = @PhoneNumber, Password = @Password, CreditCardNumber = @CreditCardNumber, CreditCardExpDate = @CreditCardExpDate, CVV = @CVV, ShippingLocation = @ShippingLocation 
+                              SET Username = @Username, FirstName = @FirstName, LastName = @LastName, Email = @Email, PhoneNumber = @PhoneNumber, Password = @Password
                               WHERE UserID = @Id";
         using (SqlCommand cmd = new SqlCommand(query, connection))
         {
@@ -124,14 +109,9 @@ namespace CombinedAPI.Repositories
           cmd.Parameters.AddWithValue("@Username", user.username);
           cmd.Parameters.AddWithValue("@FirstName", user.firstName);
           cmd.Parameters.AddWithValue("@LastName", user.lastName);
-          cmd.Parameters.AddWithValue("@Address", user.address);
           cmd.Parameters.AddWithValue("@Email", user.email);
           cmd.Parameters.AddWithValue("@PhoneNumber", user.phoneNumber);
           cmd.Parameters.AddWithValue("@Password", user.password);
-          cmd.Parameters.AddWithValue("@CreditCardNumber", user.creditcardNumber);
-          cmd.Parameters.AddWithValue("@CreditCardExpDate", user.creditcardExpDate);
-          cmd.Parameters.AddWithValue("@CVV", user.cvv);
-          cmd.Parameters.AddWithValue("@ShippingLocation", user.shippingLocation);
           cmd.Parameters.AddWithValue("@Id", id);
 
           int rowsAffected = cmd.ExecuteNonQuery();
